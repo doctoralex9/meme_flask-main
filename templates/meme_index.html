@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Meme</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('{{ url_for('static', filename='images/background.jpg') }}') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .meme-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.5); /* Semi-transparent background */
+            padding: 1.5vw;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 60vh; /* Limit the meme height */
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .subreddit {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background: linear-gradient(135deg, #ff8c00 60%, #ffd280); /* Orange with white gradient */
+            border: 1px solid #fff; /* White border */
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #e07b00 60%, #ffa940); /* Darker orange with gradient on hover */
+            border-color: #e0e0e0; /* Slightly lighter border on hover */
+        }
+
+        /* Media Query for smaller devices */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                height: auto;
+                justify-content: flex-start;
+            }
+
+            .meme-container {
+                width: 95%;
+                padding: 3vw;
+            }
+
+            img {
+                max-height: 40vh; /* Smaller image for smaller screens */
+            }
+
+            .btn {
+                font-size: 0.9em;
+            }
+
+            .subreddit {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .subreddit {
+                font-size: 0.9em;
+            }
+
+            .btn {
+                font-size: 0.8em;
+                padding: 8px 16px;
+            }
+
+            img {
+                max-height: 35vh; /* Further reduced size for small mobile screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="meme-container">
+        <img id="memeImage" src="{{ meme_pic }}" alt="Random Meme">
+        <div class="subreddit">From: <strong>{{ meme_title }}</strong></div>
+        <button class="btn" onclick="getNewMeme()">Get New Meme</button>
+    </div>
+
+    <script>
+        function getNewMeme() {
+            fetch('/new_meme')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.meme_pic) {
+                        document.getElementById('memeImage').src = data.meme_pic;
+                        document.querySelector('.subreddit').innerHTML = 'From: <strong>' + data.meme_title + '</strong>';
+                    } else {
+                        console.error('Error fetching new meme:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                });
+        }
+    </script>
+</body>
+</html>
