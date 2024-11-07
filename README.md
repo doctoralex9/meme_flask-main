@@ -46,7 +46,8 @@ Install the required dependencies:
 
 ```bash
 
-pip install flask requests
+pip pip install -r requirements.txt
+
 Running the Application
 Start the Flask server:
 
